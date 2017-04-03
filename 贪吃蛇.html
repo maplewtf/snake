@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<body>
+<canvas id="ground" width="400" height="400" style="background:Black"></canvas>
+<script>
+    var snakeColor = "lime",foodColor = "Yellow";
+    var snake = [42,41],fx=1,dz=43;
+    var n;
+    var ctx = document.getElementById("ground").getContext("2d");
+    function draw(t,c) {
+        ctx.fillStyle = c;
+        ctx.fillRect(t%20*20+1, ~~(t/20)*20+1, 18, 18);//左上角坐标和x*y,双取反是为了取整
+    }
+
+    document.onkeydown=function(e){
+        var key = (e||event).keyCode;
+        if(key >= 37 && key <= 40){
+            n = [-1,-20,1,20][key-37];//上下左右还是不变
+            fx = snake[1]-snake[0] == n?fx:n;
+           // return alert(fx);
+        }
+        
+    };
+
+    ~function() {
+        snake.unshift(n=snake[0] + fx);
+        if(n > 399 || n < 0 || fx==1&&n%20==0 || fx==-1&&n%20==19 || snake.indexOf(n,1) > 0){//最后判断是否吃到自己
+            return alert("GAME OVER!");
+        }
+        draw(n,snakeColor);
+        if(n == dz) {
+            while(snake.indexOf(dz = ~~(Math.random()*400)) >= 0);
+            draw(dz,foodColor);
+        }
+        else {
+            draw(snake.pop(),"Black");
+        }
+        setTimeout(arguments.callee,130);//暂停时间
+    }();
+</script>
+</body>
+</html>
